@@ -29,7 +29,7 @@ export default {
   updateChapter(chapter) {
     return request({
       url: `${api_name}/updateChapter`,
-      method: 'post',
+      method: 'put',
       data: chapter
     })
   },
@@ -38,6 +38,12 @@ export default {
     return request({
       url: `${api_name}/deleteChapter/${id}`,
       method: 'delete'
+    })
+  },
+  getChapterById(id) {
+    return request({
+      url: `${api_name}/getChapterById/${id}`,
+      method: 'get'
     })
   }
 }

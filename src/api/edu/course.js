@@ -3,7 +3,7 @@ const api_name = '/edu/course'
 export default {
   saveCourseInfo(courseInfo) {
     return request({
-      url: `${api_name}/save-course-info`,
+      url: `${api_name}/addCourse`,
       method: 'post',
       data: courseInfo
     })

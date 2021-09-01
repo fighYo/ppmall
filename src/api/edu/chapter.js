@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const api_name = '/edu/teacher'
+const api_name = '/edu/chapter'
 
 export default {
   // 1 根据课程id获取章节和小节数据列表
@@ -19,9 +19,9 @@ export default {
     })
   },
   // 根据id查询章节
-  getChapter(id) {
+  getNestedTreeList(courseId) {
     return request({
-      url: `${api_name}/getChapterById/${id}`,
+      url: `${api_name}/getChapter/${courseId}`,
       method: 'get'
     })
   },

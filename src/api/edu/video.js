@@ -2,18 +2,27 @@ import request from '@/utils/request'
 const api_name = '/edu/video'
 
 export default {
-
-  // 添加小节
-  addVideo(videoVo) {
+  saveVideoInfo(videoInfo) {
     return request({
       url: `${api_name}/saveVideo`,
       method: 'post',
-      data: videoVo
+      data: videoInfo
     })
   },
-
-  // 删除小节
-  deleteVideo(id) {
+  getVideoInfoById(id) {
+    return request({
+      url: `${api_name}/getVideo/${id}`,
+      method: 'get'
+    })
+  },
+  updateVideoInfoById(videoInfo) {
+    return request({
+      url: `${api_name}/updateVideo`,
+      method: 'put',
+      data: videoInfo
+    })
+  },
+  removeById(id) {
     return request({
       url: `${api_name}/deleteVideo/${id}`,
       method: 'delete'

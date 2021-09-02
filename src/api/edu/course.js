@@ -20,5 +20,30 @@ export default {
       method: 'put',
       data: courseInfo
     })
+  },
+  getCoursePublishInfoById(id) {
+    return request({
+      url: `${api_name}/getPublishCourseInfo/${id}`,
+      method: 'get'
+    })
+  },
+  publishCourse(id) {
+    return request({
+      url: `${api_name}/publishCourse/${id}`,
+      method: 'put'
+    })
+  },
+  getPageList(cur, limit, courseQuery) {
+    return request({
+      url: `${api_name}/getPageList/${cur}/${limit}`,
+      method: 'get',
+      params: courseQuery
+    })
+  },
+  removeById(id) {
+    return request({
+      url: `${api_name}removeCourse/${id}`,
+      method: 'delete'
+    })
   }
 }

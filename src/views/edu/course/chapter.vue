@@ -23,7 +23,8 @@
                         title: '',
                         sort: 0,
                         free: 0,
-                        videoSourceId: ''}">添加课时</el-button>
+                        videoSourceId: '',
+                        videoOriginalName: ''}">添加课时</el-button>
             <el-button type="text" @click="editChapter(chapter.id)">编辑</el-button>
             <el-button type="text" @click="removeChapter(chapter.id)">删除</el-button>
           </span>
@@ -74,14 +75,34 @@
           <el-input-number v-model="video.sort" :min="0" controls-position="right"/>
         </el-form-item>
         <el-form-item label="是否免费">
-          <el-radio-group v-model="video.free">
+          <el-radio-group v-model="video.isFree">
             <el-radio :label="true">免费</el-radio>
             <el-radio :label="false">默认</el-radio>
           </el-radio-group>
         </el-form-item>
+
         <el-form-item label="上传视频">
-          <!-- TODO -->
+          <el-upload
+            :on-success="handleVodUploadSuccess"
+            :on-remove="handleVodRemove"
+            :before-remove="beforeVodRemove"
+            :on-exceed="handleUploadExceed"
+            :file-list="fileList"
+            :action="BASE_API+'/vod/upload'"
+            :limit="1"
+            class="upload-demo">
+            <el-button size="small" type="primary">上传视频</el-button>
+            <el-tooltip placement="right-end">
+              <div slot="content">最大支持1G，<br>
+                支持3GP、ASF、AVI、DAT、DV、FLV、F4V、<br>
+                GIF、M2T、M4V、MJ2、MJPEG、MKV、MOV、MP4、<br>
+                MPE、MPG、MPEG、MTS、OGG、QT、RM、RMVB、<br>
+                SWF、TS、VOB、WMV、WEBM 等视频格式上传</div>
+              <i class="el-icon-question"/>
+            </el-tooltip>
+          </el-upload>
         </el-form-item>
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVideoFormVisible = false">取 消</el-button>
@@ -94,6 +115,7 @@
 <script>
 import chapter from '@/api/edu/chapter.js'
 import video from '@/api/edu/video'
+import vod from '@/api/edu/vod'
 
 export default {
   data() {
@@ -112,9 +134,12 @@ export default {
       video: {// 课时对象
         title: '',
         sort: 0,
-        free: 0,
-        videoSourceId: ''
-      }
+        isFree: 0,
+        videoSourceId: '',
+        videoOriginalName: ''
+      },
+      fileList: [], // 上传文件列表
+      BASE_API: process.env.BASE_API // 接口API地址
     }
   },
   created() {
@@ -255,6 +280,7 @@ export default {
       this.fetchChapterNestedListByCourseId()// 刷新列表
       this.video.title = ''// 重置章节标题
       this.video.sort = 0// 重置章节标题
+      this.video.isFree = 0
       this.video.videoSourceId = ''// 重置视频资源id
       this.saveVideoBtnDisabled = false
     },
@@ -262,6 +288,7 @@ export default {
       this.dialogVideoFormVisible = true
       video.getVideoInfoById(videoId).then(response => {
         this.video = response.data.item
+        this.fileList = [{ 'name': this.video.videoOriginalName }]
       })
     },
     removeVideo(videoId) {
@@ -285,6 +312,30 @@ export default {
           })
         }
       })
+    },
+    // 视图上传多于一个视频
+    handleUploadExceed(files, fileList) {
+      this.$message.warning('想要重新上传视频，请先删除已上传的视频')
+    },
+    beforeVodRemove(file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    handleVodRemove(file, fileList) {
+      console.log(file)
+      vod.removeById(this.video.videoSourceId).then(response => {
+        this.video.videoSourceId = ''
+        this.video.videoOriginalName = ''
+        this.fileList = []
+        this.$message({
+          type: 'success',
+          message: response.message
+        })
+      })
+    },
+
+    handleVodUploadSuccess(response, file, fileList) {
+      this.video.videoSourceId = response.data.videoId
+      this.video.videoOriginalName = file.name
     }
   }
 }

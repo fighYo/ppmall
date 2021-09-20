@@ -90,7 +90,7 @@
 </template>
 <script>
 
-import teacher from '@/api/edu/teacher'
+import teacher from '@/api/mall/teacher'
 export default {
   data() {
     return {
@@ -117,7 +117,7 @@ export default {
           this.list = response.data.rows
           this.total = response.data.total
         }).catch(response => {
-          console.log(error)
+          console.log('error')
         })
     },
     resetData() {

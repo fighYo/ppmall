@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const api_name = '/edu/chapter'
+const api_name = '/mall/chapter'
 
 export default {
   // 1 根据课程id获取章节和小节数据列表

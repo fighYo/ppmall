@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-const api_name = '/edu/user'
+const api_name = '/mall/user'
 
 export function login(username, password) {
   return request({

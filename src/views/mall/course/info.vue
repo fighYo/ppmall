@@ -81,9 +81,9 @@
 </template>
 
 <script>
-import course from '@/api/edu/course'
-import subject from '@/api/edu/subject'
-import teacher from '@/api/edu/teacher'
+import course from '@/api/mall/course'
+import subject from '@/api/mall/subject'
+import teacher from '@/api/mall/teacher'
 import Tinymce from '@/components/Tinymce'
 const defaultForm = {
   title: '',

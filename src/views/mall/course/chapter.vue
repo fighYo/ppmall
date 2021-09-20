@@ -8,7 +8,7 @@
     </el-steps>
     <el-button type="text" @click="dialogChapterFormVisible = true; chapter = {title: '', sort: 0}">添加章节</el-button>
     <!-- 章节 -->
-    <ul class="chapterList">
+    <ul class="levelOneList">
       <li
         v-for="chapter in chapterNestedList"
         :key="chapter.id">
@@ -30,7 +30,7 @@
           </span>
         </p>
         <!-- 视频 -->
-        <ul class="chapterList videoList">
+        <ul class="levelOneList videoList">
           <li
             v-for="video in chapter.children"
             :key="video.id">
@@ -113,9 +113,9 @@
 
 </template>
 <script>
-import chapter from '@/api/edu/chapter.js'
-import video from '@/api/edu/video'
-import vod from '@/api/edu/vod'
+import chapter from '@/api/mall/chapter.js'
+import video from '@/api/mall/video'
+import vod from '@/api/mall/vod'
 
 export default {
   data() {
@@ -159,10 +159,10 @@ export default {
       if (this.$route.params && this.$route.params.id) {
         this.courseId = this.$route.params.id
         // 根据id获取课程基本信息
-        this.fetchChapterNestedListByCourseId()
+        this.getGategorys()
       }
     },
-    fetchChapterNestedListByCourseId() {
+    getGategorys() {
       chapter.getNestedTreeList(this.courseId).then(response => {
         this.chapterNestedList = response.data.items
       })
@@ -209,7 +209,7 @@ export default {
 
     helpSave() {
       this.dialogChapterFormVisible = false// 如果保存成功则关闭对话框
-      this.fetchChapterNestedListByCourseId()// 刷新列表
+      this.getGategorys()// 刷新列表
       this.chapter.title = ''// 重置章节标题
       this.chapter.sort = 0// 重置章节标题
       this.saveBtnDisabled = false
@@ -228,7 +228,7 @@ export default {
       }).then(() => {
         return chapter.deleteChapter(chapterId)
       }).then(() => {
-        this.fetchChapterNestedListByCourseId()// 刷新列表
+        this.getGategorys()// 刷新列表
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -277,7 +277,7 @@ export default {
     },
     helpSaveVideo() {
       this.dialogVideoFormVisible = false// 如果保存成功则关闭对话框
-      this.fetchChapterNestedListByCourseId()// 刷新列表
+      this.getGategorys()// 刷新列表
       this.video.title = ''// 重置章节标题
       this.video.sort = 0// 重置章节标题
       this.video.isFree = 0
@@ -299,7 +299,7 @@ export default {
       }).then(() => {
         return video.removeById(videoId)
       }).then(() => {
-        this.fetchChapterNestedListByCourseId()// 刷新列表
+        this.getGategorys()// 刷新列表
         this.$message({
           type: 'success',
           message: '删除成功!'
@@ -342,16 +342,16 @@ export default {
 </script>
 
 <style scoped>
-.chapterList{
+.levelOneList{
   position: relative;
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.chapterList li{
+.levelOneList li{
   position: relative;
 }
-.chapterList p{
+.levelOneList p{
   float: left;
   font-size: 20px;
   margin: 10px 0;
@@ -361,7 +361,7 @@ export default {
   width: 100%;
   border: 1px solid #DDD;
 }
-.chapterList .acts {
+.levelOneList .acts {
   float: right;
   font-size: 14px;
 }

@@ -59,7 +59,7 @@ v-show：是否显示上传组件
   </div>
 </template>
 <script>
-import teacherApi from '@/api/edu/teacher'
+import teacherApi from '@/api/mall/teacher'
 import ImageCropper from '@/components/ImageCropper'
 import PanThumb from '@/components/PanThumb'
 export default {
@@ -84,12 +84,12 @@ export default {
   },
   methods: {
     close() {
-      this.imagecropperKey = this.imagecropperKey + 1,
+      this.imagecropperKey = this.imagecropperKey + 1
       this.imagecropperShow = false
     },
     cropSuccess(data) {
-      this.imagecropperShow = false,
-      this.imagecropperKey = this.imagecropperKey + 1,
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
       this.teacher.avatar = data.url
     },
     init() {

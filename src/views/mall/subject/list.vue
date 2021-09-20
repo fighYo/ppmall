@@ -16,7 +16,7 @@
 
 <script>
 
-import subject from '@/api/edu/subject'
+import subject from '@/api/mall/subject'
 
 export default {
 

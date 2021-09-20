@@ -37,51 +37,64 @@ export const constantRouterMap = [
     }]
   },
   {
-    path: '/teacher',
+    path: '/advert',
     component: Layout,
-    redirect: '/teacher/table',
-    name: '讲师管理',
-    meta: { title: '讲师管理', icon: 'example' },
+    redirect: '/advert/table',
+    name: '轮播图管理',
+    meta: { title: '轮播图管理', icon: 'example' },
     children: [
       {
         path: 'table',
-        name: '讲师列表',
-        component: () => import('@/views/edu/teacher/list'),
-        meta: { title: '讲师列表', icon: 'table' }
+        name: '轮播图列表',
+        component: () => import('@/views/mall/advert/list'),
+        meta: { title: '轮播图列表', icon: 'table' }
       },
       {
         path: 'save',
-        name: '添加讲师',
-        component: () => import('@/views/edu/teacher/save'),
-        meta: { title: '添加讲师', icon: 'tree' }
+        name: '添加轮播图',
+        component: () => import('@/views/mall/advert/save'),
+        meta: { title: '添加轮播图', icon: 'form' }
       },
       {
         path: 'edit/:id',
-        name: '编辑讲师',
-        component: () => import('@/views/edu/teacher/save'),
-        meta: { title: '编辑讲师', noCache: true },
+        name: '编辑轮播图',
+        component: () => import('@/views/mall/advert/save'),
+        meta: { title: '编辑轮播图', noCache: true },
         hidden: true
       }
     ]
   },
   {
-    path: '/subject',
+    path: '/category',
     component: Layout,
-    redirect: '/subject/table',
-    name: '课程分类管理',
-    meta: { title: '课程分类管理', icon: 'example' },
+    redirect: '/category/list',
+    name: '商品管理',
+    meta: { title: '商品管理', icon: 'example' },
     children: [
       {
+        path: 'list',
+        name: '品类管理列表',
+        component: () => import('@/views/mall/category/list'),
+        meta: { title: '商品分类列表', icon: 'tree' }
+      },
+      {
         path: 'table',
-        name: '课程分类列表',
-        component: () => import('@/views/edu/subject/list'),
-        meta: { title: '课程分类列表', icon: 'table' }
+        name: '商品列表',
+        component: () => import('@/views/mall/category/table'),
+        meta: { title: '商品列表', icon: 'table' }
       },
       {
         path: 'save',
-        name: '添加课程分类',
-        component: () => import('@/views/edu/subject/save'),
-        meta: { title: '添加课程分类', icon: 'tree' }
+        name: '增加商品',
+        component: () => import('@/views/mall/category/save'),
+        meta: { title: '增加商品', icon: 'form' }
+      },
+      {
+        path: 'edit/:id',
+        name: '编辑商品',
+        component: () => import('@/views/mall/category/save'),
+        meta: { title: '编辑商品', noCache: true },
+        hidden: true
       }]
   },
   {
@@ -94,33 +107,33 @@ export const constantRouterMap = [
       {
         path: 'list',
         name: '课程列表',
-        component: () => import('@/views/edu/course/list'),
+        component: () => import('@/views/mall/course/list'),
         meta: { title: '课程列表', icon: 'table' }
       },
       {
         path: 'info',
         name: '添加课程',
-        component: () => import('@/views/edu/course/info'),
+        component: () => import('@/views/mall/course/info'),
         meta: { title: '添加课程', icon: 'tree' }
       },
       {
         path: 'info/:id',
         name: '编辑课程基本信息',
-        component: () => import('@/views/edu/course/info'),
+        component: () => import('@/views/mall/course/info'),
         meta: { title: '编辑课程基本信息', noCache: true },
         hidden: true
       },
       {
         path: 'chapter/:id',
         name: '编辑课程大纲',
-        component: () => import('@/views/edu/course/chapter'),
+        component: () => import('@/views/mall/course/chapter'),
         meta: { title: '编辑课程大纲', noCache: true },
         hidden: true
       },
       {
         path: 'publish/:id',
         name: '发布课程',
-        component: () => import('@/views/edu/course/publish'),
+        component: () => import('@/views/mall/course/publish'),
         meta: { title: '发布课程', noCache: true },
         hidden: true
       }

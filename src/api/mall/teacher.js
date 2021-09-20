@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const api_name = '/edu/teacher'
+const api_name = '/mall/teacher'
 export default {
   // 1 讲师列表（条件查询分页）
   // current当前页 limit每页记录数 teacherQuery条件对象

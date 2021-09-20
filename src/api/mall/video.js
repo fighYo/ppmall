@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const api_name = '/edu/video'
+const api_name = '/mall/video'
 
 export default {
   saveVideoInfo(videoInfo) {

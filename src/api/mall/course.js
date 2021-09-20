@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-const api_name = '/edu/course'
+const api_name = '/mall/course'
 export default {
   saveCourseInfo(courseInfo) {
     return request({

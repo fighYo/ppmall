@@ -24,7 +24,7 @@
 </template>
 <script>
 
-import course from '@/api/edu/course'
+import course from '@/api/mall/course'
 
 export default {
   data() {

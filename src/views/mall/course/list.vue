@@ -121,9 +121,9 @@
   </div>
 </template>
 <script>
-import course from '@/api/edu/course'
-import teacher from '@/api/edu/teacher'
-import subject from '@/api/edu/subject'
+import course from '@/api/mall/course'
+import teacher from '@/api/mall/teacher'
+import subject from '@/api/mall/subject'
 export default {
   data() {
     return {

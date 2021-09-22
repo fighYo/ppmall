@@ -50,19 +50,14 @@
 <script>
 import advert from '@/api/mall/advert'
 import category from '@/api/mall/category'
-import ImageCropper from '@/components/ImageCropper'
-import PanThumb from '@/components/PanThumb'
 export default {
-  components: { ImageCropper, PanThumb },
   data() {
     return {
       productRoute: [],
       advert: {
-        image: 'https://aaa-ppmall.oss-cn-hangzhou.aliyuncs.com/pic01.jpg',
+        image: '',
         sort: 1 },
       options: {},
-      imagecropperShow: false,
-      imagecropperKey: 0,
       BASE_API: process.env.BASE_API,
       saveBtnDisabled: false
     }
@@ -88,7 +83,7 @@ export default {
       this.initCategoryNestedList()
     },
     initCategoryNestedList() {
-      category.getNestedTreeList()
+      category.getNestedTreeListWithProduct()
         .then(response => {
           this.options = response.data.categoryNestedList
           if (this.advert.productId) {

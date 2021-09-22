@@ -2,7 +2,7 @@
   <div class="app-container">
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
-      <el-form-item>
+      <el-form-item label="轮播图详情">
         <el-input v-model="advertQuery.detail" placeholder="轮播图详情"/>
       </el-form-item>
 
@@ -15,7 +15,7 @@
           default-time="00:00:00"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="结束时间">
         <el-date-picker
           v-model="advertQuery.end"
           type="datetime"

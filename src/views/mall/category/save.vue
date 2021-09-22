@@ -1,46 +1,69 @@
 <template>
   <div class="app-container">
     <el-form label-width="120px">
-      <el-form-item label="轮播图详情">
-        <el-input v-model="advert.detail"/>
-      </el-form-item>
-      <el-form-item label="轮播图排序">
-        <el-input-number v-model="advert.position" controls-position="right" min="0.5"/>
+      <el-form-item label="商品名称">
+        <el-input v-model="product.name"/>
       </el-form-item>
 
-      <el-form-item label="产品名称">
-        <el-cascader v-model="productRoute" :props="{value:'id',label:'name'}" :options="options" :show-all-levels="false"/>
+      <el-form-item label="商品描述">
+        <el-input v-model="product.subtitle"/>
       </el-form-item>
 
-      <el-form-item label="起始时间">
-        <el-date-picker
-          v-model="advert.beginTime"
-          type="datetime"
-          placeholder="选择起始时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          default-time="00:00:00"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-date-picker
-          v-model="advert.endTime"
-          type="datetime"
-          placeholder="选择结束时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          default-time="00:00:00"
-        />
+      <el-form-item label="价格">
+        <el-input-number v-model="product.price" :step="0.01" :max="99999999"/>
       </el-form-item>
 
-      <el-form-item label="轮播图图像">
+      <el-form-item label="库存">
+        <el-input-number v-model="product.stock" :step="1" :max="99999999" step-strictly/>
+      </el-form-item>
+
+      <el-form-item label="商品分类">
+        <el-cascader v-model="categoryRoute" :props="{value:'id',label:'name'}" :options="options"/>
+      </el-form-item>
+
+      <el-form-item label="商品状态">
+        <el-select
+          v-model="product.status"
+          placeholder="请选择">
+          <el-option
+            v-for="_status in status"
+            :key="_status.value"
+            :label="_status.label"
+            :value="_status.value"/>
+        </el-select>
+      </el-form-item>
+
+      <el-form-item label="商品封面">
         <el-upload
           :action="BASE_API+'/oss/upload'"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
           class="avatar-uploader">
-          <img v-if="advert.image" :src="advert.image" class="avatar">
+          <img v-if="product.mainImage" :src="product.mainImage" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"/>
         </el-upload>
       </el-form-item>
+
+      <el-form-item label="预览图片">
+        <el-upload
+          :action="BASE_API+'/oss/upload'"
+          :on-preview="handlePictureCardPreview"
+          :on-remove="handleRemove"
+          :on-success="uploadSuccess"
+          :show-file-list="true"
+          :file-list="subImageList"
+          list-type="picture-card">
+          <i class="el-icon-plus"/>
+        </el-upload>
+      </el-form-item>
+      <el-dialog :visible.sync="dialogVisible">
+        <img :src="dialogImageUrl" width="100%" alt="">
+      </el-dialog>
+
+      <el-form-item label="商品简介">
+        <tinymce :height="600" v-model="product.detail"/>
+      </el-form-item>
+
       <el-form-item>
         <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate">保存</el-button>
       </el-form-item>
@@ -48,23 +71,34 @@
   </div>
 </template>
 <script>
-import advert from '@/api/mall/advert'
 import category from '@/api/mall/category'
-import ImageCropper from '@/components/ImageCropper'
-import PanThumb from '@/components/PanThumb'
+import product from '@/api/mall/product'
+import Tinymce from '@/components/Tinymce'
+
 export default {
-  components: { ImageCropper, PanThumb },
+  components: { Tinymce },
   data() {
     return {
-      productRoute: [],
-      advert: {
-        image: 'https://aaa-ppmall.oss-cn-hangzhou.aliyuncs.com/pic01.jpg',
-        sort: 1 },
+      categoryRoute: [],
+      product: {},
       options: {},
-      imagecropperShow: false,
-      imagecropperKey: 0,
       BASE_API: process.env.BASE_API,
-      saveBtnDisabled: false
+      saveBtnDisabled: false,
+      dialogImageUrl: '',
+      dialogVisible: false,
+      subImageList: [],
+      status: [{
+        value: 1,
+        label: '在售'
+      },
+      {
+        value: 2,
+        label: '下架'
+      },
+      {
+        value: 3,
+        label: '删除'
+      }]
     }
   },
   watch: {
@@ -82,8 +116,8 @@ export default {
         const id = this.$route.params.id
         this.getInfo(id)
       } else {
-        this.advert = {}
-        this.productRoute = []
+        this.product = {}
+        this.categoryRoute = []
       }
       this.initCategoryNestedList()
     },
@@ -91,16 +125,13 @@ export default {
       category.getNestedTreeList()
         .then(response => {
           this.options = response.data.categoryNestedList
-          if (this.advert.productId) {
-            for (var i = 0; i < this.options.length; i++) {
-              var nestedTwo = this.options[i].children
-              for (var j = 0; j < nestedTwo.length; j++) {
-                var nestedThree = nestedTwo[j].children
-                for (var k = 0; k < nestedThree.length; k++) {
-                  if (this.options[i].children[j].children[k].id === this.advert.productId) {
-                    this.productRoute.push(this.options[i].id, nestedTwo[j].id, nestedThree[k].id)
-                    return
-                  }
+          if (this.product.id) {
+            for (let i = 0; i < this.options.length; i++) {
+              const nestedTwo = this.options[i].children
+              for (let j = 0; j < nestedTwo.length; j++) {
+                if (this.options[i].children[j].id === this.product.categoryId) {
+                  this.categoryRoute.push(this.options[i].id, nestedTwo[j].id)
+                  return
                 }
               }
             }
@@ -108,48 +139,78 @@ export default {
         })
     },
     getInfo(id) {
-      advert.getAdvert(id)
+      product.getProduct(id)
         .then(response => {
-          this.advert = response.data.advert
+          this.product = response.data.product
+          this.initSubImageList(response.data.product.subImages.split(','))
         })
     },
-    saveOrUpdate() {
-      this.advert.productId = this.productRoute[2]
-      if (!this.advert.id) {
-        this.saveAdvert()
-      } else {
-        this.updateAdvert()
+    initSubImageList(subImages) {
+      for (let i = 0; i < subImages.length; i++) {
+        this.subImageList.push({ url: subImages[i] })
       }
     },
-    updateAdvert() {
-      advert.updateAdvert(this.advert)
+    saveOrUpdate() {
+      this.product.categoryId = this.categoryRoute[1]
+      if (!this.product.id) {
+        this.saveProduct()
+      } else {
+        this.updateProduct()
+      }
+    },
+    updateProduct() {
+      product.updateProduct(this.product)
         .then(response => {
           this.$message({
             type: 'success',
             message: '修改成功!'
           })
-          this.$router.push({ path: '/advert/table' })
+          this.$router.push({ path: '/category/table' })
         })
     },
-    saveAdvert() {
-      advert.addAdvert(this.advert)
+    saveProduct() {
+      product.addProduct(this.product)
         .then(response => {
           this.$message({
             type: 'success',
             message: '添加成功!'
           })
-          this.$router.push({ path: '/advert/table' })
+          this.$router.push({ path: '/category/table' })
         })
     },
+    handleRemove(file, fileList) {
+      this.changeSubImages(fileList)
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    uploadSuccess(res, file, fileList) {
+      fileList[fileList.length - 1].url = res.data.url
+      this.changeSubImages(fileList)
+    },
+    changeSubImages(fileList) {
+      let temp_str = ''
+      if (fileList.length > 0) {
+        for (let i = 0; i < fileList.length; i++) {
+          if (i === 0) {
+            temp_str += fileList[i].url
+          } else {
+            temp_str += ',' + fileList[i].url
+          }
+        }
+      }
+      this.product.subImages = temp_str
+    },
     handleAvatarSuccess(res, file) {
-      this.advert.image = res.data.url
+      this.product.mainImage = res.data.url
       this.$forceUpdate()
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;
@@ -172,5 +233,9 @@ export default {
   width: 300px;
   height: 200px;
   display: block;
+}
+
+.tinymce-container {
+  line-height: 29px;
 }
 </style>

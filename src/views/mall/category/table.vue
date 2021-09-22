@@ -3,28 +3,25 @@
     <!--查询表单-->
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="productQuery.detail" placeholder="轮播图详情"/>
+        <el-input v-model="productQuery.name" placeholder="商品名称"/>
       </el-form-item>
-
-      <el-form-item label="起始时间">
-        <el-date-picker
-          v-model="productQuery.begin"
-          type="datetime"
-          placeholder="选择起始时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          default-time="00:00:00"
-        />
+      <el-form-item label="最低价格">
+        <el-input-number v-model="productQuery.minPrice" :step="0.01" :max="99999999"/>
       </el-form-item>
-      <el-form-item>
-        <el-date-picker
-          v-model="productQuery.end"
-          type="datetime"
-          placeholder="选择结束时间"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          default-time="00:00:00"
-        />
+      <el-form-item label="最高价格">
+        <el-input-number v-model="productQuery.maxPrice" :step="0.01" :max="99999999"/>
       </el-form-item>
-
+      <el-form-item style="width: 150px">
+        <el-select
+          v-model="productQuery.status"
+          placeholder="商品状态">
+          <el-option
+            v-for="_status in status"
+            :key="_status.value"
+            :label="_status.label"
+            :value="_status.value"/>
+        </el-select>
+      </el-form-item>
       <el-button type="primary" icon="el-icon-search" @click="getList()">查询</el-button>
       <el-button type="default" @click="resetData()">清空</el-button>
     </el-form>
@@ -46,19 +43,50 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="detail" label="详情" width="250" />
-
-      <el-table-column prop="productId" label="产品名" width="255"/>
-
-      <el-table-column prop="beginTime" label="起始时间" width="160"/>
-
-      <el-table-column prop="endTime" label="结束时间" width="160"/>
-
-      <el-table-column prop="position" label="排序" width="60" />
-
-      <el-table-column label="操作" width="200" align="center">
+      <el-table-column label="产品名" width="250" >
         <template slot-scope="scope">
-          <router-link :to="'/advert/edit/'+scope.row.id">
+          <router-link :to="'/category/detail/'+scope.row.id">
+            {{ scope.row.name }}
+          </router-link>
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="subtitle" label="商品描述" width="255"/>
+
+      <el-table-column label="价格" width="125">
+        <template slot-scope="scope">
+          ￥{{ scope.row.price }}
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="stock" label="库存数量" width="125"/>
+
+      <el-table-column label="商品状态" width="80">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status === 1">
+            <el-tag type="success" effect="dark">
+              在售
+            </el-tag>
+          </div>
+          <div v-else-if="scope.row.status === 2">
+            <el-tag type="info" effect="dark">
+              下架
+            </el-tag>
+          </div>
+          <div v-else>
+            <el-tag type="danger" effect="dark">
+              删除
+            </el-tag>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="操作" width="264" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/category/detail/'+scope.row.id">
+            <el-button type="primary" size="mini" icon="el-icon-search">查看</el-button>
+          </router-link>
+          <router-link :to="'/category/edit/'+scope.row.id">
             <el-button type="primary" size="mini" icon="el-icon-edit">修改</el-button>
           </router-link>
 
@@ -87,7 +115,19 @@ export default {
       current: 1,
       limit: 5,
       total: 10,
-      productQuery: {}
+      productQuery: {},
+      status: [{
+        value: 1,
+        label: '在售'
+      },
+      {
+        value: 2,
+        label: '下架'
+      },
+      {
+        value: 3,
+        label: '删除'
+      }]
     }
   },
   created() {

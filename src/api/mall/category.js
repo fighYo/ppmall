@@ -2,6 +2,12 @@ import request from '@/utils/request'
 const api_name = '/mall/category'
 export default {
   // 1 课程分类列表
+  getNestedTreeListWithProduct() {
+    return request({
+      url: `${api_name}/categoryNestedListWithProduct`,
+      method: 'get'
+    })
+  },
   getNestedTreeList() {
     return request({
       url: `${api_name}/categoryNestedList`,

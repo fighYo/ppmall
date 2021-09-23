@@ -58,10 +58,18 @@
       </el-descriptions-item>
 
       <el-descriptions-item label="商品封面">
+        <template slot="label">
+          <i class="el-icon-shopping-cart-2"/>
+          商品封面
+        </template>
         <img :src="product.mainImage" :alt="product.name" style="width: 400px; height: 300px; margin: auto;">
       </el-descriptions-item>
 
-      <el-descriptions-item label="预览图片">
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-shopping-cart-2"/>
+          预览图片
+        </template>
         <template>
           <el-carousel :interval="5000" arrow="always" style="width: 400px; height: 300px; margin: auto;">
             <el-carousel-item v-for="item in subImageList" :key="item">
@@ -71,7 +79,11 @@
         </template>
       </el-descriptions-item>
 
-      <el-descriptions-item label="商品简介">
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-shopping-cart-2"/>
+          商品简介
+        </template>
         <template>
           <el-button type="primary" style="margin-left: 16px;" @click="drawer = true">
             点我打开

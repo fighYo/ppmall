@@ -33,7 +33,14 @@
 
       <el-table-column prop="orderNo" label="订单编号" width="250" />
 
-      <el-table-column prop="userId" label="用户ID" width="255"/>
+      <el-table-column label="用户ID" width="255" align="center">
+        <template slot-scope="scope">
+          <router-link :to="'/order/shipping/'+scope.row.shippingId">
+            {{ scope.row.userId }}
+          </router-link>
+        </template>
+      </el-table-column>
+
       <el-table-column label="订单状态" width="100">
         <template slot-scope="scope">
           <div v-if="scope.row.status === 0">

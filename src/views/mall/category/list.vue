@@ -5,8 +5,13 @@
       type="text"
       @click="dialogCategoryOneFormVisible = true
               category = {name: ''}
-              categoryId = ''"
-    >添加一级分类</el-button>
+              categoryId = ''">添加一级分类</el-button>
+
+    <el-button
+      type="text"
+      @click="dialogCategoryTwoFormVisible = true;
+              categoryId = '';
+              category= {}">添加二级分类</el-button>
     <!-- 章节 -->
     <ul class="levelOneList">
       <li
@@ -15,11 +20,6 @@
         <p>
           {{ categoryOne.name }}
           <span class="acts">
-            <el-button
-              type="text"
-              @click="dialogCategoryTwoFormVisible = true;
-                      categoryId = '';
-                      category= {}">添加二级分类</el-button>
             <el-button type="text" @click="editCategoryOne(categoryOne.id)">编辑</el-button>
             <el-button type="text" @click="removeCategory(categoryOne.id)">删除</el-button>
           </span>

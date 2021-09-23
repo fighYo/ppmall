@@ -85,9 +85,9 @@ export const constantRouterMap = [
       },
       {
         path: 'save',
-        name: '增加商品',
+        name: '添加商品',
         component: () => import('@/views/mall/category/save'),
-        meta: { title: '增加商品', icon: 'form' }
+        meta: { title: '添加商品', icon: 'form' }
       },
       {
         path: 'edit/:id',
@@ -123,6 +123,13 @@ export const constantRouterMap = [
         component: () => import('@/views/mall/order/detail'),
         meta: { title: '订单详情', icon: 'form' },
         hidden: true
+      },
+      {
+        path: 'shipping/:id',
+        name: '物流详情',
+        component: () => import('@/views/mall/order/shipping'),
+        meta: { title: '物流详情', icon: 'form' },
+        hidden: true
       }]
   },
   {
@@ -131,7 +138,7 @@ export const constantRouterMap = [
     children: [
       {
         path: 'https://gitee.com/fighYo/ppmall',
-        meta: { title: 'External Link', icon: 'link' }
+        meta: { title: 'gitee', icon: 'gitee' }
       }
     ]
   },

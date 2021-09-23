@@ -15,7 +15,9 @@
           <i class="el-icon-user"/>
           用户ID
         </template>
-        {{ item.userId }}
+        <router-link :to="'/order/shipping/'+item.shippingId">
+          {{ item.userId }}
+        </router-link>
       </el-descriptions-item>
 
       <el-descriptions-item>
